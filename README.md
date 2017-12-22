@@ -1,6 +1,6 @@
 # PAD-lab2
 
-### Deployement Diagram
+### Deployment Diagram
 
 ![image](https://github.com/Alexx-G/PAD-labs/raw/master/images/l2_schema.png)
 
