@@ -37,10 +37,16 @@ public class QueryListenerService extends Thread {
             connection = new TCPConnection(accept);
             while(accept.isConnected()) {
                 String query = connection.read();
+                String[] split = query.split("\\?");
                 System.out.println(query);
                 Packet<String> packet = new Packet<>();
-                String collect = aggregateData(query).stream().map(e -> XmlConverter.convertToXMLString(e, University.class))
-                        .collect(Collectors.joining());
+                String collect = aggregateData(split[0]).stream().map(e -> {
+                    if(split.length == 1 || split[1].contains("xml")) {
+                        return XmlConverter.convertToXMLString(e, University.class);
+                    } else {
+                        return GsonConverter.convertToJson(e);
+                    }
+                }).collect(Collectors.joining());
                 packet.setObject(collect);
                 connection.write(packet);
             }
@@ -58,6 +64,8 @@ public class QueryListenerService extends Thread {
         });
         return list;
     }
+
+
 
 
     private void initNodeConnections(Map<String, Node> nodeMap) {
